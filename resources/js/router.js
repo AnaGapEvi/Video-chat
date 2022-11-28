@@ -8,7 +8,8 @@ import Registration from "./components/auth/Registration.vue";
 import Login from "./components/auth/Login.vue";
 import VideoChat from "./components/auth/VideoChat.vue";
 import Container from "./components/chat/Container.vue"
-
+import VideoApp from "./components/videoApp.vue";
+import TwilioChat from "./components/TwilioChat.vue";
 Vue.use(vueRouter);
 
 const routes = [
@@ -17,7 +18,9 @@ const routes = [
     {path: '/', component: Registration},
     {path: '/login', component: Login},
     {path: '/video-chat', component: VideoChat},
-    {path: '/container', component: Container}
+    {path: '/container', component: Container},
+    {path: '/video', component: VideoApp},
+    {path: '/twilio-chat', component: TwilioChat}
 ]
 
 export default  new  vueRouter({

@@ -22,9 +22,13 @@ use Illuminate\Support\Facades\Broadcast;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+
+
+
 Route::middleware('auth:api')->group(function () {
     Broadcast::routes();
-//    Broadcast::routes(['middleware' => ['auth:api']]);
+    Route::post('token', "TwilioChatController@getToken");
+
     Route::get('/auth-user', [AuthController::class, 'authUser']);
     Route::get('/logout', [AuthController::class, 'logout']);
     Route::get('/forgot-password', [AuthController::class, 'forgotPassword']);

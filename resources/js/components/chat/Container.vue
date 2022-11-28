@@ -39,27 +39,29 @@ export default {
         }
     },
     watch:{
-        currentRoom() {
+        currentRoom( val, oldVal) {
+            if( oldVal.id){
+                this.disconnect( oldVal )
+            }
             this.connect();
         }
     },
     created(){
       this.getRooms()
     },
-    mounted() {
-
-    },
     methods:{
         connect(){
             if(this.currentRoom.id){
                 let vm = this;
-                this.getMessages()
-                // Echo.connector.pusher.config.auth.headers.Authorization = `Bearer ${localStorage.getItem('access_token')}`;
+                // this.getMessages()
                 window.Echo.private("chat." + this.currentRoom.id)
                     .listen('.message.new', e =>{
                         vm.getMessages()
                     })
             }
+        },
+        disconnect(room){
+            window.Echo.leave("chat." + room.id);
         },
         getRooms(){
             this.axios.get('api/chat/rooms')
@@ -79,6 +81,7 @@ export default {
             this.axios.get('api/chat/room/'+this.currentRoom.id + '/messages')
                 .then( response => {
                     this.messages = response.data
+                    console.log(response.data)
                 })
                 .catch( error => {
                     console.log(error )

@@ -9,7 +9,7 @@
                 @change="$emit('roomchanged', selected)"
             >
                 <option v-for="(room, index) in rooms"
-                        :key="index"
+                        :key="room.id"
                         :value="room">
                     {{room.name}}
                 </option>

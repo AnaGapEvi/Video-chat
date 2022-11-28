@@ -9,19 +9,14 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from "axios";
 import VueAxios from 'vue-axios'
 
+export const EventBus = new Vue()
 
 axios.defaults.baseURL = process.env.API_URL;
 
 Vue.use(VueAxios, axios);
-
+Vue.use(EventBus)
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
-
-// window.axios.defaults.headers.common = {
-//     'X-Requested-With': 'XMLHttpRequest'
-// };
-//
-// axios.defaults.headers.common['X-CSRF-TOKEN'] =  document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 
 Vue.component('test', require('./components/test.vue').default);
 axios.interceptors.request.use(

@@ -8,6 +8,7 @@
             </li>
             <li style="color: white"><button class="logout-btn" @click="logout()">logout</button></li>
         </ul>
+        <p style="color: white">{{user.email}}</p>
         <ul >
             <li v-for="link in links">
                 <router-link :to='link.href' :class="{ 'active': (link.id === id)}" >
@@ -32,10 +33,12 @@ export default {
             ],
             authLinks: [
                 {id: 2,title: 'Chat', href:'/video-chat'},
+                {id: 2,title: 'Video', href:'/video'},
                 // {id: 3,title: 'logout', href:'/'},
             ],
             userId:'',
             id:1,
+            user:{}
         }
     },
     // watch:{
@@ -75,6 +78,7 @@ export default {
         authUser() {
             axios.get('/api/auth-user').then(response => {
                 this.userId = response.data.user.id
+                this.user = response.data.user
                 console.log(this.userId)
             }).catch(error => {
                 this.error = error.response.data.error

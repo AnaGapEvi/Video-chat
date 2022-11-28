@@ -28,5 +28,12 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    forceTLS: true
+    forceTLS: true,
+    authEndpoint: '/broadcasting/auth',
+    auth: {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+            'X-CSRF-Token': "CSRF_TOKEN"
+        }
+    },
 });
