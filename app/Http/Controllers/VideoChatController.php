@@ -10,12 +10,11 @@ class VideoChatController extends Controller
     public function index(Request $request) {
         $user = $request->user();
         $others = User::where('id', '!=', $user->id)->pluck('name', 'id');
-        return view('video_chat.index')->with([
+        return response()->json([
             'user' => collect($request->user()->only(['id', 'name'])),
             'others' => $others
         ]);
     }
-
     public function auth(Request $request) {
         $user = $request->user();
         $socket_id = $request->socket_id;
@@ -34,20 +33,4 @@ class VideoChatController extends Controller
         );
     }
 
-//    public function callUser(Request $request)
-//    {
-//        $data['userToCall'] = $request->user_to_call;
-//        $data['signalData'] = $request->signal_data;
-//        $data['from'] = Auth::id();
-//        $data['type'] = 'incomingCall';
-//
-//        broadcast(new StartVideoChat($data))->toOthers();
-//    }
-//    public function acceptCall(Request $request)
-//    {
-//        $data['signal'] = $request->signal;
-//        $data['to'] = $request->to;
-//        $data['type'] = 'callAccepted';
-//        broadcast(new StartVideoChat($data))->toOthers();
-//    }
 }

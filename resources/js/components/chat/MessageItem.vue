@@ -1,5 +1,5 @@
 <template>
-    <div>{{message.user.name}}: {{message.message}}</div>
+    <div>{{message.user_id}}: {{message.message}}</div>
 </template>
 
 <script>

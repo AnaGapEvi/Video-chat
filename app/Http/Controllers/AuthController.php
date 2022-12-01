@@ -40,7 +40,9 @@ class AuthController extends Controller
 
         return response()->json(['token' => $token], 200);
     }
-
+    public function getAllUsers(){
+        return User::all();
+    }
     public function login(Request $request): JsonResponse
     {
         $validator = $request->validate([
@@ -67,8 +69,6 @@ class AuthController extends Controller
     }
     public function authUser(): JsonResponse
     {
-//        return response()->json([ 'valid' => auth()->check() ]);
-
         return response()->json(['user' => auth()->user()]);
     }
 

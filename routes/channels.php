@@ -24,4 +24,10 @@ Broadcast::channel('chat.{roomId}', function ($user, $roomId) {
     }
 });
 
+Broadcast::channel('client-signal-{userId}', function ($userId, $data) {
+    if(Auth::check()){
+        return ['id'=>$userId];
+    }
+});
+
 Broadcast::routes(['middleware' => ['auth:api']]);

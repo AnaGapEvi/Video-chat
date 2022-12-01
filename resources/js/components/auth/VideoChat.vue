@@ -2,10 +2,15 @@
     <div class="container">
         <h1 class="text-center">Laravel Video Chat</h1>
         <div class="video-container" ref="video-container">
-            <video class="video-here" ref="video-here" autoplay></video>
-            <video class="video-there" ref="video-there" autoplay></video>
+            <spin v-if="spin"></spin>
+            <video class="video-here" ref="video-here" autoplay>
+            </video>
+            <video class="video-there" ref="video-there" autoplay>
+
+            </video>
+            <b-button variant="info" @click.prevent="setupVideoChat()" ><b-icon icon="camera-video"></b-icon></b-button>
             <div class="text-right" v-for="(name,userId) in others" :key="userId">
-                <button @click="startVideoChat(userId)" v-text="`Talk with ${name.name}`"/>
+                <b-button variant="info" @click="startVideoChat(userId)" v-text="`Talk with ${name}`"/>
             </div>
         </div>
     </div>
@@ -13,19 +18,23 @@
 <script>
 import Pusher from 'pusher-js';
 import Peer from 'simple-peer';
+import axios from "axios";
+import Spin from "../spin.vue";
+// var parcelRequire;
 export default {
-    props: ['user', 'others', 'pusherKey', 'pusherCluster'],
+    components: {Spin},
+    props: ['user', 'others'],
     data() {
         return {
+            pusherKey:'4cb64a8405957ea87e24',
+            pusherCluster:'ap2',
             channel: null,
             stream: null,
             peers: {},
-            userId:'',
-
+            spin:true
         }
     },
     mounted() {
-        this.setupVideoChat();
     },
     methods: {
         startVideoChat(userId) {
@@ -45,7 +54,9 @@ export default {
                     });
                 })
                     .on('stream', (stream) => {
+                        this.spin=false
                         const videoThere = this.$refs['video-there'];
+                        this.stream=stream
                         videoThere.srcObject = stream;
                     })
                     .on('close', () => {
@@ -60,10 +71,16 @@ export default {
             return this.peers[userId];
         },
         async setupVideoChat() {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            const constraints = {
+                'audio': true,
+                'video': true
+
+            }
+            const stream = await navigator.mediaDevices.getDisplayMedia(constraints);
             const videoHere = this.$refs['video-here'];
             videoHere.srcObject = stream;
             this.stream = stream;
+
             const pusher = this.getPusherInstance();
             this.channel = pusher.subscribe('presence-video-chat');
             this.channel.bind(`client-signal-${this.user.id}`, (signal) =>
@@ -74,15 +91,16 @@ export default {
         },
         getPusherInstance() {
             return new Pusher(this.pusherKey, {
-                authEndpoint: '/auth/video_chat',
+                authEndpoint: 'api/auth/video_chat',
                 cluster: this.pusherCluster,
                 auth: {
                     headers: {
-                        'X-CSRF-Token': document.head.querySelector('meta[name="csrf-token"]').content
+                        'X-CSRF-Token': document.head.querySelector('meta[name="csrf-token"]').content,
+                        Authorization: `Bearer ${localStorage.getItem('access_token')}`
                     }
                 }
             });
-        }
+        },
     }
 };
 </script>
@@ -97,6 +115,7 @@ export default {
 }
 .video-here {
     width: 130px;
+    /*height: 130px;*/
     position: absolute;
     left: 10px;
     bottom: 16px;
@@ -107,9 +126,16 @@ export default {
 .video-there {
     width: 100%;
     height: 100%;
+    background: #d5e4e7;
     z-index: 1;
 }
-.text-right {
-    text-align: right;
+.user-box{
+    /*text-align: right;*/
+    display: flex;
+    flex-wrap: wrap;
+    text-align:center;
+}
+.user-bos button{
+    margin:15px;
 }
 </style>

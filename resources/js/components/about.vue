@@ -1,23 +1,12 @@
 <template>
-    <div >
-        <spin v-if="loader"></spin>
-        <div v-else>
-            <div class="d-flex">
-                <video-chat :user="user"
-                            :others="others"
-                            pusher-key="config('broadcasting.connections.pusher.key')"
-                            pusher-cluster="config('broadcasting.connections.pusher.options.cluster')">
-                </video-chat>
-
-            </div>
-            <div>
-
-            </div>
-        </div>
-<!--        <h1> About</h1>-->
-
-
-
+    <div>
+        <video-chat
+            :user="user"
+            :others="others"
+            pusher-key="config('broadcasting.connections.pusher.key')"
+            pusher-cluster="config('broadcasting.connections.pusher.cluster')"
+        >
+        </video-chat>
     </div>
 </template>
 
@@ -30,22 +19,20 @@ export default {
     data(){
         return{
             loader:false,
-            user:{id:1, name:"Ani"},
-            others:[
-                {id:2, name:"Hayk"},
-                {id:3, name:"Jhoe"}
-            ]
+            user:{},
+            others:[]
         }
     },
     mounted(){
-        this.getPosts()
+        this.getUsers()
     },
     methods:{
-        getPosts(){
-            axios.get('/api/posts').then( response =>{
-                return  response.data
+        getUsers(){
+            axios.get('api/video_chat').then( response =>{
+                this.user = response.data.user
+                this.others = response.data.others
             })
-        }
+        },
     }
 
 }

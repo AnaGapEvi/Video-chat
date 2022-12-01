@@ -35,7 +35,9 @@ export default {
             roomName: 'Live',
         }
     },
-    created() {},
+    created() {
+        console.log(this.username)
+    },
     methods: {
         async getAccessToken() {
             return await axios.get(`api/token?identity=${this.username}`);

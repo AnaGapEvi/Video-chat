@@ -9,12 +9,10 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from "axios";
 import VueAxios from 'vue-axios'
 
-export const EventBus = new Vue()
 
 axios.defaults.baseURL = process.env.API_URL;
 
 Vue.use(VueAxios, axios);
-Vue.use(EventBus)
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 

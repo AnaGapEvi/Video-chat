@@ -12,19 +12,14 @@ import { EventBus } from '../../Event'
 import AddRoom from '../VideoChat/AddRoom.vue'
 
 export default {
-    name: "Rooms", // Name of the component
+    name: "Rooms",
     components: {
         AddRoom
     },
     data() {
         return {
-            rooms: [
-                {id: 1, name: 'PHP Room'},
-                {id: 2, name: 'Python Room'},
-                {id: 3, name: 'Daily standup'}
-            ],
-            roomCount: 3,
-            loading: false,
+            rooms: [],
+            roomCount: Number,
         }
     },
 
@@ -33,10 +28,20 @@ export default {
             this.roomCount++;
             this.rooms.push({id: this.roomCount, name: data});
         });
+        this.getRooms()
     },
     methods: {
         showRoom(room) {
             EventBus.$emit('show_room', room);
+        },
+        getRooms() {
+            this.axios.get('api/chat/rooms')
+                .then(response => {
+                    console.log(response.data)
+                    this.rooms = response.data
+                    this.roomCount=this.rooms.length
+                    console.log(this.roomCount)
+                })
         }
     }
 

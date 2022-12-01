@@ -30,7 +30,6 @@ export default {
         Rooms,
         Video,
         Logs,
-        AddRoom
     },
     data() {
         return {

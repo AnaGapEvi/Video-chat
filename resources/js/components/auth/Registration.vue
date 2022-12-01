@@ -54,7 +54,6 @@ export default {
               //     this.errors.errorPassword = error.response.data.errors.password
               // // } else {
                   this.error=error.response.data.message
-              //     console.log(this.error)
               // }
             })
         }

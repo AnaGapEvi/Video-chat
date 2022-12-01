@@ -52,11 +52,17 @@ export default {
     methods:{
         connect(){
             if(this.currentRoom.id){
+                // console.log(this.currentRoom.id, 'current room')
                 let vm = this;
-                // this.getMessages()
+                this.getMessages()
                 window.Echo.private("chat." + this.currentRoom.id)
-                    .listen('.message.new', e =>{
-                        vm.getMessages()
+                    .listen('NewChatMessage', e =>{
+                        this.messages.push({
+                            chat_room_id: this.currentRoom.id,
+                            user_id: e.chatMessage.user_id,
+                            message: e.chatMessage.message,
+                        })
+                        // vm.getMessages()
                     })
             }
         },
@@ -67,7 +73,6 @@ export default {
             this.axios.get('api/chat/rooms')
                 .then( response => {
                     this.chatRooms=response.data
-                    console.log(this.chatRooms)
                     this.setRoom(response.data[0])
                 })
                 .catch(error =>{
@@ -81,7 +86,6 @@ export default {
             this.axios.get('api/chat/room/'+this.currentRoom.id + '/messages')
                 .then( response => {
                     this.messages = response.data
-                    console.log(response.data)
                 })
                 .catch( error => {
                     console.log(error )
