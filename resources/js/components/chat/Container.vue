@@ -52,7 +52,6 @@ export default {
     methods:{
         connect(){
             if(this.currentRoom.id){
-                // console.log(this.currentRoom.id, 'current room')
                 let vm = this;
                 this.getMessages()
                 window.Echo.private("chat." + this.currentRoom.id)

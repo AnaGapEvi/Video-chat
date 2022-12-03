@@ -29,11 +29,13 @@ export default {
     },
     methods: {
         loginAuth() {
-            this.axios.post('/api/login', this.form)
+            axios.post('/api/login', this.form)
                 .then(resp => {
+                    // axios.defaults.headers.common['Authorization'] = 'Bearer ' + resp.data.token;
                     localStorage.setItem('access_token', resp.data.token);
                     this.token = resp.data.token
                     this.$router.push({path: '/container'})
+                    window.location.reload()
                 }).catch( error => {
                 this.error=error.response.data.message
             })

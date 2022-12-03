@@ -31,5 +31,9 @@ import router from "./router";
 
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    // mounted () {
+    //     let audio = new Audio('http://127.0.0.1:8000/about'); // path to file
+    //     audio.play();
+    // }
 });

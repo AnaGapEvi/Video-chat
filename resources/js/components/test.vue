@@ -1,23 +1,24 @@
 <template>
     <div class="nav">
-        <ul v-if="userId !== ''" class="d-flex; justify-content-between w-100">
-            <li v-for="link in authLinks" :class="{ 'active': (link.id === id)}">
-                <router-link :to='link.href' @click="show(link.id)">
-                    <p @click="show(link.id)">{{link.title}} </p>
-                </router-link>
-            </li>
-            <li><p style="color: white">{{user.email}} {{user.id}}</p> </li>
-            <li style="color:white">
-            </li>
-            <li style="color: white"><button class="logout-btn" @click="logout()">logout</button></li>
-        </ul>
-        <ul v-else>
+
+        <ul v-if="userId === null">
             <li v-for="link in links">
                 <router-link :to='link.href' :class="{ 'active': (link.id === id)}" >
                    <p @click="show(link.id)">{{link.title}} </p>
                 </router-link>
             </li>
 
+        </ul>
+        <ul v-else class="d-flex; justify-content-between w-100">
+            <li v-for="link in authLinks" :class="{ 'active': (link.id === id)}">
+                <router-link :to='link.href' @click="show(link.id)">
+                    <p @click="show(link.id)">{{link.title}} </p>
+                </router-link>
+            </li>
+            <li><p style="color: white">{{user.email}}</p> </li>
+            <li style="color:white">
+            </li>
+            <li style="color: white"><button class="logout-btn" @click="logout()">logout</button></li>
         </ul>
     </div>
 </template>
@@ -40,20 +41,34 @@ export default {
                 {id: 3,title: 'Video', href:'/about'},
                 {id: 3,title: 'OtherVideo', href:'/video'},
             ],
-            userId:'',
+            userId:null,
             id:1,
             user:{}
         }
     },
+    watch: {
+        userIdGet(newValue, old){
+                this.authUser()
+        }
+    },
     created() {
+        if(localStorage.getItem('access_token')){
             this.authUser()
+        }
+    },
+    computed:{
+      userIdGet(){
+          return this.userId
+        }
     },
     methods:{
         logout(){
             axios.get('/api/logout').then( result => {
                 localStorage.removeItem('access_token');
                 this.userId=null
+                this.user={}
                 this.$router.push({path: "/"});
+                console.log(this.userId)
             }).catch(error => {
                 return error
             })
@@ -69,6 +84,8 @@ export default {
             axios.get('/api/auth-user').then(response => {
                 this.userId = response.data.user.id
                 this.user = response.data.user
+                console.log(this.userId)
+
             }).catch(error => {
                 this.error = error.response.data.error
             })
